@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>CryptoVault — Plateforme de Sécurité Cryptographique</title>
+    <style>
+        :root {
+            /* Palette Officielle CryptoVault Template (Bleu Nuit, Émeraude Sarcelle & Blanc) */
+            --bg-dark: #0B1D2A;           /* Fond sombre ardoise marine */
+            --bg-navy: #12394D;           /* Bleu pétrole foncé */
+            --bg-card: #153243;           /* Fond cartes */
+            --bg-card-hover: #1B4257;     /* Survol cartes */
+            --teal-border: #2E7D9A;       /* Bordures sarcelle océan */
+            --teal-border-light: #5BC0A5; /* Bordures menthe claire */
+            --accent-teal: #00907B;       /* Vert émeraude / Sarcelle primaire */
+            --accent-teal-bright: #5BC0A5;/* Menthe vive */
+            --accent-teal-glow: rgba(0, 144, 123, 0.4);
+            --accent-amber: #F5A623;      /* Or / Ambre */
+            --accent-coral: #D9534F;      /* Alerte corail */
+            --text-white: #FFFFFF;        /* Blanc pur */
+            --text-ice: #EAF4F2;          /* Blanc glacier / Menthe très claire */
+            --text-muted: #8FA3B5;        /* Gris acier ardoise */
+            --text-dim: #607D8B;          /* Gris atténué */
+            --terminal-bg: #07131D;       /* Fond terminal console */
+            --terminal-green: #34D399;
+            --terminal-yellow: #F5A623;
+            --terminal-blue: #5BC0A5;
+            --shadow-teal: 0 10px 30px rgba(0, 144, 123, 0.2);
+            --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.5);
+            
+            /* Alias de compatibilité interne */
+            --bg-wine: var(--bg-navy);
+            --bg-wine-card: var(--bg-card);
+            --bg-wine-hover: var(--bg-card-hover);
+            --wine-border: var(--teal-border);
+            --wine-border-light: var(--teal-border-light);
+            --blood-red: var(--accent-teal);
+            --blood-red-bright: var(--accent-teal-bright);
+            --blood-red-glow: var(--accent-teal-glow);
+            --wine-deep: var(--bg-navy);
+            --text-cream: var(--text-ice);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Calibri", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #0B1D2A 0%, #12394D 50%, #07131D 100%);
+            color: var(--text-cream);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* En-tête Navigation */
+        header {
+            background: rgba(11, 29, 42, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--wine-border);
+            padding: 14px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--blood-red-bright) 0%, var(--wine-deep) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-white);
+            box-shadow: 0 0 15px var(--blood-red-glow);
+            border: 1px solid var(--text-white);
+        }
+
+        .brand-text h1 {
+            font-family: "Cambria", Georgia, serif;
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: var(--text-white);
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text-cream);
+            border: 1px solid transparent;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-wine-hover);
+            border-color: var(--wine-border-light);
+            color: var(--text-white);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--blood-red) 0%, var(--wine-deep) 100%);
+            border-color: var(--blood-red-bright);
+            color: var(--text-white);
+            box-shadow: 0 2px 10px var(--blood-red-glow);
+        }
+
+        /* Contenu Principal */
+        main {
+            flex: 1;
+            padding: 24px 32px;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cartes et Grilles */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-wine-card);
+            border: 1px solid var(--wine-border);
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--wine-border-light);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--wine-border);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .co-owner-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: rgba(18, 57, 77, 0.45);
+            border: 1px solid var(--wine-border);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .co-owner-pill:hover {
+            background: rgba(0, 144, 123, 0.25);
+            border-color: var(--accent-teal);
+        }
+        .co-owner-pill input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            accent-color: var(--accent-teal);
+            cursor: pointer;
+        }
+
+        .badge-red {
+            background: rgba(220, 38, 38, 0.2);
+            color: #F87171;
+            border: 1px solid #DC2626;
+        }
+
+        .badge-wine {
+            background: rgba(18, 57, 77, 0.6);
+            color: #EAF4F2;
+            border: 1px solid #2E7D9A;
+        }
+
+        .badge-green {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34D399;
+            border: 1px solid #059669;
+        }
+
+        /* Formulaires & Entrées */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: rgba(13, 2, 4, 0.75);
+            border: 1px solid var(--wine-border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-white);
+            font-size: 13.5px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--blood-red-bright);
+            box-shadow: 0 0 0 3px var(--blood-red-glow);
+        }
+
+        /* Boutons d'Action */
+        .btn {
+            background: linear-gradient(135deg, var(--blood-red-bright) 0%, var(--blood-red) 100%);
+            color: var(--text-white);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px var(--blood-red-glow);
+            filter: brightness(1.1);
+        }
+
+        .btn-wine {
+            background: linear-gradient(135deg, var(--wine-deep) 0%, #4A0404 100%);
+            border: 1px solid var(--wine-border-light);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--wine-border-light);
+            color: var(--text-cream);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-wine-hover);
+            border-color: var(--blood-red-bright);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00907B 0%, #064E44 100%);
+            border: 1px solid #5BC0A5;
+            color: var(--text-white);
+        }
+        .btn-success:hover {
+            box-shadow: 0 4px 15px rgba(0, 144, 123, 0.4);
+            filter: brightness(1.15);
+        }
+
+        .btn-danger {
+            background: rgba(220, 38, 38, 0.18);
+            border: 1px solid #DC2626;
+            color: #FCA5A5;
+        }
+        .btn-danger:hover {
+            background: #DC2626;
+            color: white;
+            box-shadow: 0 2px 10px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-amber {
+            background: rgba(245, 166, 35, 0.15);
+            border: 1px solid #F5A623;
+            color: #FCD34D;
+        }
+        .btn-amber:hover {
+            background: #F5A623;
+            color: #0B1D2A;
+            font-weight: 700;
+        }
+
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 11.5px;
+            border-radius: 6px;
+        }
+
+        .btn-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Terminal Console Intégré */
+        .terminal-box {
+            background: var(--terminal-bg);
+            border: 1px solid var(--wine-border);
+            border-radius: 10px;
+            padding: 16px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: #E2E8F0;
+            max-height: 380px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #280810;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #EF4444; }
+        .dot-yellow { background: #F59E0B; }
+        .dot-green { background: #10B981; }
+
+        .terminal-content {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .cli-prompt {
+            color: #F43F5E;
+            font-weight: bold;
+        }
+
+        .cli-cmd {
+            color: #67E8F9;
+        }
+
+        /* Section Chat Messagerie */
+        .chat-box {
+            height: 280px;
+            background: rgba(10, 2, 4, 0.6);
+            border: 1px solid var(--wine-border);
+            border-radius: 8px;
+            padding: 14px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .msg-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .msg-sent {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--blood-red) 0%, var(--wine-deep) 100%);
+            color: var(--text-white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .msg-received {
+            align-self: flex-start;
+            background: rgba(18, 57, 77, 0.85);
+            color: var(--text-white);
+            border: 1px solid var(--accent-teal);
+        }
+
+        .msg-meta {
+            font-size: 10px;
+            opacity: 0.75;
+            margin-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--wine-border);
+        }
+
+        th {
+            background: rgba(13, 2, 4, 0.4);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Merkle Tree Visualizer */
+        .tree-node {
+            background: var(--bg-wine-hover);
+            border: 1px solid var(--wine-border-light);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tree-root {
+            border-color: var(--blood-red-bright);
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(128, 0, 32, 0.2) 100%);
+            font-weight: bold;
+        }
+
+        /* Toast Notifications */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--bg-wine-card);
+            border: 1px solid var(--blood-red-bright);
+            color: var(--text-white);
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            font-size: 13.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="brand">
+            <div class="brand-logo">CV</div>
+            <div class="brand-text">
+                <h1>CryptoVault</h1>
+                <p>Messagerie E2EE & Coffre-Fort Sécurisé</p>
+            </div>
+        </div>
+        <nav>
+            <button class="nav-btn active" onclick="switchTab('dashboard')">Tableau de Bord</button>
+            <button class="nav-btn" onclick="switchTab('messaging')">Messagerie E2EE</button>
+            <button class="nav-btn" onclick="switchTab('vault')">Coffre-Fort</button>
+            <button class="nav-btn" onclick="switchTab('terminal')">Terminal CLI</button>
+            <button class="nav-btn" onclick="switchTab('lab')">Laboratoire d'Attaques</button>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+
+        <!-- ================= TAB 1 : DASHBOARD & PKI ================= -->
+        <div id="tab-dashboard" class="tab-content active">
+            <div class="grid-3" style="margin-bottom: 24px;">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Autorité Racine (Root CA)</span>
+                        <span class="badge badge-green">Valide 3650 j</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Sujet : <strong style="color:white;" id="root-ca-subj">Chargement...</strong></p>
+                    <p style="font-size: 12px; color: var(--text-dim);">N° Série : <span id="root-ca-serial">...</span></p>
+                    <p style="font-size: 12px; color: var(--text-dim);">Algorithme : <strong>ECDSA P-256 + SHA256</strong></p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Autorité Intermédiaire</span>
+                        <span class="badge badge-wine">Serveur CA</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Sujet : <strong style="color:white;" id="inter-ca-subj">Chargement...</strong></p>
+                    <p style="font-size: 12px; color: var(--text-dim);">Délivré par : Root CA (Chaîne validée)</p>
+                    <p style="font-size: 12px; color: var(--text-dim);">Usage : <code>keyCertSign, cRLSign</code></p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Utilisateurs Inscrits</span>
+                        <span class="badge badge-red" id="users-count-badge">0</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Protection des mots de passe :</p>
+                    <p style="font-size: 12px; color: var(--text-dim);">PBKDF2-HMAC-SHA256 (100k itérations)</p>
+                    <p style="font-size: 12px; color: var(--text-dim);">Sel cryptographique 128 bits</p>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- Inscription rapide -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Inscription d'un Nouvel Utilisateur</span>
+                        <span class="badge badge-wine">PKI X.509</span>
+                    </div>
+                    <form id="form-register" onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label>Nom d'utilisateur (CN) :</label>
+                            <input type="text" id="reg-username" required placeholder="ex: alice, bob, charlie">
+                        </div>
+                        <div class="form-group">
+                            <label>Mot de passe principal (protège le Keystore) :</label>
+                            <input type="password" id="reg-password" required placeholder="Mot de passe fort (ex: Secret#2026)">
+                        </div>
+                        <button type="submit" class="btn btn-success" style="width: 100%;">Générer Clé ECDSA P-256 & Émettre Certificat X.509</button>
+                    </form>
+                    <div style="margin-top: 14px; font-size: 12px; color: var(--text-dim); background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px;">
+                        Commande CLI équivalente : <code>python3 app/client.py register --username &lt;nom&gt; --password &lt;mdp&gt; --keystore &lt;fichier&gt;</code>
+                    </div>
+                </div>
+
+                <!-- Liste des utilisateurs et certificats -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Annuaire & Certificats Actifs</span>
+                        <button class="btn btn-outline btn-sm" onclick="loadStatus()">Actualiser</button>
+                    </div>
+                    <div style="max-height: 250px; overflow-y: auto;">
+                        <table id="table-users">
+                            <thead>
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>N° Certificat</th>
+                                    <th>Statut CRL</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="4" style="text-align:center;">Chargement...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2 : MESSAGERIE SÉCURISÉE ================= -->
+        <div id="tab-messaging" class="tab-content">
+            <div class="grid-2">
+                <!-- Panneau de session et handshake -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <span class="card-title">Session TLS Client-Serveur</span>
+                            <span style="font-size:11px; color:var(--text-dim); display:block; margin-top:2px;">
+                                Établissement ECDHE P-256 & Authentification par Certificat X.509
+                            </span>
+                        </div>
+                        <span class="badge badge-wine" id="session-badge">Aucune Session</span>
+                    </div>
+
+                    <!-- Bloc 1 : Authentification & Connexion -->
+                    <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--wine-border); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: var(--terminal-green); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                            1. Déverrouillage KeyStore & Connexion
+                        </div>
+                        <div class="form-group">
+                            <label>Votre Identité (KeyStore) :</label>
+                            <select id="msg-user-select" onchange="onSenderChange()" autocomplete="off">
+                                <option value="" disabled selected>-- Choisir votre identité (KeyStore) --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mot de passe du KeyStore :</label>
+                            <input type="password" id="msg-password" autocomplete="new-password" placeholder="Mot de passe pour déchiffrer votre clé privée..." onkeydown="if(event.key==='Enter') startHandshake()">
+                        </div>
+
+                        <!-- Boutons de session clairs et équilibrés -->
+                        <div style="display: flex; gap: 10px; margin-top: 12px;">
+                            <button type="button" class="btn btn-success" id="btn-start-session" onclick="startHandshake()" style="flex: 1;">
+                                Déverrouiller & Démarrer Session
+                            </button>
+                            <button type="button" class="btn btn-danger" id="btn-stop-session" onclick="stopSession()" style="display: none; padding: 10px 16px;">
+                                Déconnexion
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bloc 2 : Destinataire de l'Échange -->
+                    <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--wine-border); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+                        <div style="font-size: 11.5px; font-weight: 700; color: var(--accent-mint); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                            2. Destinataire de la Conversation
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Sélectionnez un correspondant inscrit :</label>
+                            <select id="msg-recipient-select" onchange="loadConversation()" autocomplete="off" disabled>
+                                <option value="" disabled selected>-- Déverrouillez votre session d'abord --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Bloc 3 : Laboratoire d'Attaques & Tests de Robustesse de la Session -->
+                    <div style="background: rgba(0,0,0,0.25); border: 1px dashed var(--wine-border); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                            3. Audit de Robustesse Cryptographique
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="simulateReplayAttack()" title="Rejouer un paquet déjà consommé (vérification numéro de séquence)">
+                                Tester Rejeu (Anti-Replay)
+                            </button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="simulateEavesdrop()" title="Tester tentative de déchiffrement sans la clé de session (rejet GMAC)">
+                                Interception (Eve / GMAC)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Métadonnées Cryptographiques de la Session Active -->
+                    <div id="session-details" style="display:none; background: rgba(13,2,4,0.6); padding: 14px; border-radius: 8px; border: 1px solid var(--wine-border);">
+                        <p style="font-size: 12px; margin-bottom: 6px;">Secret partagé ECDH ($Z_x$) : <code id="sec-shared" style="color:var(--text-muted);">...</code></p>
+                        <p style="font-size: 12px; margin-bottom: 6px;">Clé de session HKDF (256 bits) : <code id="sec-key" style="color:var(--terminal-green);">...</code></p>
+                        <p style="font-size: 12px;">Numéro de séquence sortant : <strong id="sec-seq" style="color:white;">0</strong> (Anti-rejeu actif)</p>
+                    </div>
+                </div>
+
+                <!-- Panneau de messagerie temps réel -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <span class="card-title">Boîte de Réception & Flux Chiffré</span>
+                            <span id="inbox-status-desc" style="font-size:11px; color:var(--text-dim); display:block; margin-top:2px;">
+                                Chiffrement de bout-en-bout AES-256-GCM
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="loadConversation()" style="padding: 4px 10px; font-size: 11px; border-color: var(--accent-mint); color: var(--accent-mint);">Actualiser</button>
+                            <span class="badge badge-wine" id="convo-badge">Verrouillé</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-box" id="chat-messages">
+                        <!-- Rempli dynamiquement -->
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="chat-input" disabled placeholder="Connectez-vous à votre session ci-contre pour rédiger un message..." onkeydown="if(event.key==='Enter') sendMessage()">
+                        <button type="button" class="btn btn-success" id="btn-send-message" disabled onclick="sendMessage()" style="padding: 10px 20px; opacity: 0.5; cursor: not-allowed;">
+                            Envoyer
+                        </button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 11px; color: var(--text-dim);">
+                        Commande CLI équivalente : <code>python3 app/client.py test-session --username &lt;user&gt; --password &lt;mdp&gt; --message "..."</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3 : COFFRE-FORT (VAULT) ================= -->
+        <div id="tab-vault" class="tab-content">
+            <div class="grid-2">
+                <!-- Dépôt et Chiffrement Hybride -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Ajouter & Signer un Document</span>
+                        <span class="badge badge-red">Multi-Propriétaires</span>
+                    </div>
+                    <form id="form-vault-add" onsubmit="handleVaultAdd(event)" autocomplete="off">
+                        <div class="form-group">
+                            <label>Auteur / Propriétaire Principal :</label>
+                            <select id="vault-user-select" onchange="onVaultAuthorChange()" autocomplete="off">
+                                <option value="" disabled selected>-- Choisir l'auteur (KeyStore) --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mot de passe KeyStore de l'auteur :</label>
+                            <input type="password" id="vault-password" required autocomplete="new-password" placeholder="Mot de passe pour signer le document...">
+                        </div>
+                        <div class="form-group">
+                            <label>Co-propriétaires / Destinataires initiaux autorisés :</label>
+                            <div id="vault-co-owners-list" style="display:flex; flex-wrap:wrap; gap:8px; background:rgba(0,0,0,0.3); padding:10px 12px; border-radius:8px; border:1px solid var(--wine-border); min-height:42px; align-items:center;">
+                                <span style="font-size:11.5px; color:var(--text-dim); font-style:italic;">Sélectionnez d'abord l'auteur principal ci-dessus...</span>
+                            </div>
+                            <span style="font-size:11px; color:var(--text-dim); display:block; margin-top:5px;">Cochez un ou plusieurs utilisateurs pour chiffrer la clé également pour eux dès le dépôt.</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Nom du fichier à déposer :</label>
+                            <input type="text" id="vault-filename" required autocomplete="off" placeholder="Exemple: mon_document_confidentiel.pdf">
+                        </div>
+                        <div class="form-group">
+                            <label>Contenu textuel du document :</label>
+                            <textarea id="vault-content" rows="4" style="resize:vertical;" placeholder="Contenu textuel du document à protéger et sceller..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success" style="width: 100%;">Chiffrer (AES-256-GCM), Arbre de Merkle & Sceller</button>
+                    </form>
+                    <div style="margin-top: 14px; font-size: 11.5px; color: var(--text-dim); background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
+                        Commande CLI équivalente : <code>python3 app/vault.py add --file &lt;chemin&gt; --user &lt;nom&gt; --keystore &lt;ks&gt;</code>
+                    </div>
+                </div>
+
+                <!-- Inventaire et Visualiseur Merkle -->
+                <div class="card">
+                    <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <span class="card-title">Fichiers du Coffre-Fort</span>
+                            <span id="vault-filter-desc" style="font-size: 11px; color: var(--text-dim); display: block; margin-top: 2px;">
+                                Fichiers en possession de l'utilisateur actif
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label style="margin: 0; font-size: 11.5px; white-space: nowrap; color: var(--text-muted);">Vue :</label>
+                            <select id="vault-filter-user" onchange="loadVaultFiles()" style="width: auto; padding: 4px 10px; font-size: 12px; background: rgba(18, 57, 77, 0.7); border: 1px solid var(--wine-border); border-radius: 6px; color: var(--text-white);">
+                                <option value="active">Session Active</option>
+                                <option value="all">Tous les fichiers (Mode Auditeur)</option>
+                            </select>
+                            <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="loadVaultFiles()">Actualiser</button>
+                            <button class="btn btn-danger btn-sm" style="padding: 4px 10px; font-size: 11px;" onclick="clearAllVaultFiles()" title="Purger définitivement tous les fichiers de test du coffre-fort">Purger Tout</button>
+                        </div>
+                    </div>
+                    <div style="max-height: 270px; overflow-y: auto; margin-bottom: 16px;">
+                        <table id="table-vault" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Nom du Document</th>
+                                    <th style="width: 10%;">Taille</th>
+                                    <th style="width: 13%;">Auteur</th>
+                                    <th style="width: 32%;">Droits d'Accès & Statut</th>
+                                    <th style="width: 20%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="5" style="text-align:center;">Chargement...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Visualiseur d'Arbre de Merkle -->
+                    <div class="card-header" style="margin-bottom: 8px; padding-bottom: 6px;">
+                        <span class="card-title" style="font-size:13px;">Arbre de Merkle & Signature</span>
+                    </div>
+                    <div id="merkle-display" style="font-size: 12px; color: var(--text-muted);">
+                        Sélectionnez un fichier pour inspecter sa racine de Merkle et certifier sa signature.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deuxième ligne : Partage d'accès et Test de Déchiffrement -->
+            <div class="grid-2" style="margin-top: 24px;">
+                <!-- Carte 1 : Partage du fichier (Chiffrement Enveloppe multi-destinataires) -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Partager un Fichier (Chiffrement d'Enveloppe)</span>
+                        <span class="badge badge-wine">ECIES / RSA</span>
+                    </div>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+                        Le propriétaire déchiffre la clé symétrique du fichier avec sa clé privée, puis la re-chiffre avec la clé publique du destinataire.
+                    </p>
+                    <div class="form-group">
+                        <label>Fichier à partager :</label>
+                        <select id="share-file-select" onchange="onShareFileChange()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Propriétaire actuel :</label>
+                        <select id="share-owner-select" onchange="updateShareRecipients()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe KeyStore du propriétaire :</label>
+                        <input type="password" id="share-password" placeholder="Mot de passe propriétaire pour déverrouiller sa clé">
+                    </div>
+                    <div class="form-group">
+                        <label>Destinataire à autoriser :</label>
+                        <select id="share-recipient-select"></select>
+                    </div>
+                    <button type="button" class="btn" style="width: 100%;" onclick="handleShareFile()">Chiffrer & Assigner Clé au Destinataire (ECIES / RSA)</button>
+                </div>
+
+                <!-- Carte 2 : Test de Lecture / Déchiffrement et Contrôle d'Accès -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Tester la Lecture & Contrôle d'Accès</span>
+                        <span class="badge badge-green">Vérification Intégrité</span>
+                    </div>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+                        Tentez de lire le fichier en tant qu'utilisateur. Si l'accès n'a pas été assigné, le chiffrement empêche formellement la lecture.
+                    </p>
+                    <div class="form-group">
+                        <label>Fichier cible :</label>
+                        <select id="read-file-select"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Utilisateur qui tente de lire :</label>
+                        <select id="read-user-select"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe KeyStore de cet utilisateur :</label>
+                        <input type="password" id="read-password" placeholder="Mot de passe du lecteur">
+                    </div>
+                    <button type="button" class="btn btn-success" style="width: 100%;" onclick="handleReadFile()">Tester Déchiffrement & Contrôle d'Accès</button>
+
+                    <div id="read-result" style="margin-top: 14px; font-size: 12px; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; border: 1px solid var(--wine-border);">
+                        Sélectionnez un fichier et un utilisateur pour tester si l'accès est autorisé ou rejeté.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 4 : TERMINAL CLI ================= -->
+        <div id="tab-terminal" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <span class="card-title">Console Terminal CLI</span>
+                    <span class="badge badge-green">Ligne de Commande Directe</span>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+                    Exécutez n'importe quelle commande CLI de l'application en direct depuis cette console interactive.
+                </p>
+
+                <!-- Boutons d'exemples rapides -->
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 14px;">
+                    <button type="button" class="btn btn-outline btn-sm" onclick="setCmd('python3 app/server.py status')">python3 app/server.py status</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="setCmd('python3 app/vault.py list')">python3 app/vault.py list</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="setCmd('python3 -m unittest discover -s tests -p test_*.py')">Exécuter les 65 Tests Unitaires</button>
+                </div>
+
+                <div class="terminal-box">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <div class="dot dot-red"></div>
+                            <div class="dot dot-yellow"></div>
+                            <div class="dot dot-green"></div>
+                        </div>
+                        <span style="font-size: 11px; color: var(--text-dim);">bash — cryptovault@kali</span>
+                    </div>
+                    <div class="terminal-content" id="terminal-output">CryptoVault Interactive Shell (Kali Linux Rolling)
+Tapez une commande ou cliquez sur un raccourci ci-dessus.
+</div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top: 14px;">
+                    <span style="font-family:monospace; line-height:38px; color:var(--blood-red-bright); font-weight:bold;">$</span>
+                    <input type="text" id="cli-input" placeholder="Tapez une commande (ex: python3 app/vault.py list)..." onkeydown="if(event.key==='Enter') runCliCommand()">
+                    <button type="button" class="btn btn-success" onclick="runCliCommand()" style="padding: 10px 22px;">Exécuter</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 5 : LABORATOIRE D'ATTAQUES ================= -->
+        <div id="tab-lab" class="tab-content">
+            <div class="card" style="margin-bottom: 24px;">
+                <div class="card-header">
+                    <span class="card-title">Laboratoire d'Attaques & Démonstrateurs de Failles</span>
+                    <span class="badge badge-red">Attaques Pédagogiques Validées</span>
+                </div>
+                <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px;">
+                    Lancez en direct les scripts du dossier <code>lab/</code> pour visualiser expérimentalement le cassage des briques mal configurées et la démonstration des contre-mesures.
+                </p>
+
+                <div class="grid-3">
+                    <div class="card" style="background: rgba(13,2,4,0.5);">
+                        <h4 style="color:var(--text-white); margin-bottom:6px;">1. Paradoxe des Anniversaires</h4>
+                        <p style="font-size:12px; color:var(--text-dim); margin-bottom:12px;">Collision trouvée en ~63k essais sur SHA-256 tronqué 32 bits ($2^{16}$).</p>
+                        <button type="button" class="btn btn-outline btn-sm" style="width:100%; font-weight:600;" onclick="runLabAttack('attack_collision_birthday.py')">Lancer Démonstration</button>
+                    </div>
+
+                    <div class="card" style="background: rgba(13,2,4,0.5);">
+                        <h4 style="color:var(--text-white); margin-bottom:6px;">2. Piège de Carmichael</h4>
+                        <p style="font-size:12px; color:var(--text-dim); margin-bottom:12px;">561 trompe Fermat 100% du temps, immédiatement rejeté par Miller-Rabin.</p>
+                        <button type="button" class="btn btn-outline btn-sm" style="width:100%; font-weight:600;" onclick="runLabAttack('benchmark_numtheory.py')">Lancer Démonstration</button>
+                    </div>
+
+                    <div class="card" style="background: rgba(13,2,4,0.5);">
+                        <h4 style="color:var(--text-white); margin-bottom:6px;">3. Les 4 Failles RSA</h4>
+                        <p style="font-size:12px; color:var(--text-dim); margin-bottom:12px;">Pollard-rho, malléabilité homomorphe, racine $e=3$ et facteurs partagés.</p>
+                        <button type="button" class="btn btn-outline btn-sm" style="width:100%; font-weight:600;" onclick="runLabAttack('attack_rsa_lab.py')">Lancer Démonstration</button>
+                    </div>
+
+                    <div class="card" style="background: rgba(13,2,4,0.5);">
+                        <h4 style="color:var(--text-white); margin-bottom:6px;">4. MITM de Mallory (DH)</h4>
+                        <p style="font-size:12px; color:var(--text-dim); margin-bottom:12px;">Interception et falsification de virement bancaire sur DH anonyme.</p>
+                        <button type="button" class="btn btn-outline btn-sm" style="width:100%; font-weight:600;" onclick="runLabAttack('attack_dh_mitm.py')">Lancer Démonstration</button>
+                    </div>
+
+                    <div class="card" style="background: rgba(13,2,4,0.5);">
+                        <h4 style="color:var(--text-white); margin-bottom:6px;">5. Faille Nonce ECDSA (PS3)</h4>
+                        <p style="font-size:12px; color:var(--text-dim); margin-bottom:12px;">Extraction instantanée de la clé privée P-256 par réutilisation de nonce $k$.</p>
+                        <button type="button" class="btn btn-outline btn-sm" style="width:100%; font-weight:600;" onclick="runLabAttack('attack_ecc_nonce.py')">Lancer Démonstration</button>
+                    </div>
+
+                    <div class="card" style="background: rgba(13,2,4,0.5);">
+                        <h4 style="color:var(--text-white); margin-bottom:6px;">6. Fuite Visuelle ECB (BMP)</h4>
+                        <p style="font-size:12px; color:var(--text-dim); margin-bottom:12px;">Image BMP révélant les motifs sous ECB et bit-flipping sur CBC.</p>
+                        <button type="button" class="btn btn-outline btn-sm" style="width:100%; font-weight:600;" onclick="runLabAttack('attack_symmetric_lab.py')">Lancer Démonstration</button>
+                    </div>
+                </div>
+
+                <!-- Console de sortie du lab -->
+                <div style="margin-top:24px;">
+                    <div class="terminal-box" style="max-height: 260px;">
+                        <div class="terminal-header">
+                            <span style="font-size:11px; color:var(--text-dim);">Sortie de l'attaque sélectionnée :</span>
+                            <span class="badge badge-wine" id="lab-status-badge">En attente</span>
+                        </div>
+                        <div class="terminal-content" id="lab-output">Sélectionnez une attaque ci-dessus pour observer son exécution en direct...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // État de l'application
+        let activeUser = null;
+        let activeSessionKey = null;
+        let sessionSeq = 0;
+        let lastEncryptedPkg = null;
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            const targetTab = document.getElementById('tab-' + tabId);
+            if (targetTab) targetTab.classList.add('active');
+            
+            if (window.event && window.event.currentTarget && window.event.currentTarget.classList) {
+                window.event.currentTarget.classList.add('active');
+            } else {
+                const btn = document.querySelector(`.nav-btn[onclick*="${tabId}"]`);
+                if (btn) btn.classList.add('active');
+            }
+
+            if (tabId === 'dashboard') loadStatus();
+            if (tabId === 'messaging') loadMessagingUsers();
+            if (tabId === 'vault') {
+                loadMessagingUsers();
+                loadVaultFiles();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadStatus();
+            loadMessagingUsers();
+            loadVaultFiles();
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab') || window.location.hash.replace('#', '');
+            if (tab) {
+                switchTab(tab);
+            }
+        });
+
+        function showToast(msg, isSuccess = true) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.borderColor = isSuccess ? '#10B981' : '#DC2626';
+            toast.innerHTML = '<strong style="color:' + (isSuccess ? '#34D399' : '#DC2626') + ';">[' + (isSuccess ? 'SUCCÈS' : 'ERREUR') + ']</strong> ' + msg;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Chargement du statut général
+        async function loadStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                
+                document.getElementById('root-ca-subj').innerText = data.root_ca.subject.CN || 'Root CA';
+                document.getElementById('root-ca-serial').innerText = data.root_ca.serial_number;
+                document.getElementById('inter-ca-subj').innerText = data.server_ca.subject.CN || 'Server CA';
+                document.getElementById('users-count-badge').innerText = data.users.length;
+
+                const tbody = document.querySelector('#table-users tbody');
+                tbody.innerHTML = '';
+                if (data.users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Aucun utilisateur inscrit</td></tr>';
+                } else {
+                    data.users.forEach(u => {
+                        const tr = document.createElement('tr');
+                        const statusBadge = u.revoked 
+                            ? '<span class="badge" style="background:#DC2626; color:white;">RÉVOQUÉ (CRL)</span>'
+                            : '<span class="badge badge-green">Valide (Actif)</span>';
+                        
+                        let actionsHtml = '<div class="btn-group">';
+                        if (!u.revoked) {
+                            actionsHtml += `<button class="btn btn-amber btn-sm" onclick="revokeUser('${u.username}')">Révoquer</button>`;
+                        }
+                        actionsHtml += `<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.username}')">Supprimer</button></div>`;
+
+                        tr.innerHTML = `
+                            <td><strong style="color:white;">${u.username}</strong></td>
+                            <td><code>${u.serial}</code></td>
+                            <td>${statusBadge}</td>
+                            <td>${actionsHtml}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Révocation de certificat X.509
+        async function revokeUser(username) {
+            if (!confirm(`Confirmer la révocation du certificat de '${username}' dans la CRL de l'autorité ?`)) return;
+            try {
+                const res = await fetch('/api/pki/revoke', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Certificat de '${username}' (série n°${data.serial}) RÉVOQUÉ avec succès !`, true);
+                    loadStatus();
+                    loadMessagingUsers();
+                } else {
+                    showToast(data.error || 'Erreur lors de la révocation', false);
+                }
+            } catch (err) {
+                showToast('Erreur réseau', false);
+            }
+        }
+
+        // Suppression d'utilisateur et de son keystore
+        async function deleteUser(username) {
+            if (!confirm(`Supprimer définitivement l'utilisateur '${username}', son KeyStore et révoquer son certificat ?`)) return;
+            try {
+                const res = await fetch('/api/pki/delete_user', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Utilisateur '${username}' et son KeyStore supprimés avec succès !`, true);
+                    loadStatus();
+                    loadMessagingUsers();
+                } else {
+                    showToast(data.error || 'Erreur lors de la suppression', false);
+                }
+            } catch (err) {
+                showToast('Erreur réseau', false);
+            }
+        }
+
+        // Inscription
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Utilisateur '${username}' inscrit et certificat émis !`);
+                    document.getElementById('reg-username').value = '';
+                    document.getElementById('reg-password').value = '';
+                    loadStatus();
+                    loadMessagingUsers();
+                } else {
+                    showToast(data.error || 'Erreur lors de l inscription', false);
+                }
+            } catch (err) {
+                showToast('Erreur réseau', false);
+            }
+        }
+
+        // Mise à jour dynamique de la liste des correspondants (exclut strictement l'expéditeur)
+        async function updateRecipientDropdown(currentSender, autoSelectLatest = false) {
+            const recipSel = document.getElementById('msg-recipient-select');
+            if (!recipSel) return;
+            const previousVal = recipSel.value;
+            
+            // Si aucune session n'est active, le sélecteur est désactivé et verrouillé
+            if (!activeUser || !currentSender) {
+                recipSel.disabled = true;
+                recipSel.innerHTML = '<option value="" disabled selected>-- Déverrouillez votre session d\'abord --</option>';
+                return;
+            }
+
+            recipSel.disabled = false;
+
+            // Récupérer les messages échangés par l'utilisateur actif
+            let userMessages = [];
+            try {
+                const msgRes = await fetch(`/api/session/messages?user1=${encodeURIComponent(currentSender)}`);
+                if (msgRes.ok) {
+                    userMessages = await msgRes.json();
+                }
+            } catch (e) {
+                userMessages = [];
+            }
+
+            // Calculer le nombre de messages reçus/échangés par correspondant et identifier le plus récent
+            const messageCounts = {};
+            let latestCorrespondent = null;
+            if (Array.isArray(userMessages) && userMessages.length > 0) {
+                userMessages.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+                userMessages.forEach(m => {
+                    const other = (m.sender === currentSender) ? m.recipient : m.sender;
+                    if (other && other !== currentSender) {
+                        messageCounts[other] = (messageCounts[other] || 0) + 1;
+                        latestCorrespondent = other; // Le dernier dans la chronologie
+                    }
+                });
+            }
+
+            recipSel.innerHTML = '<option value=""' + (!previousVal && !autoSelectLatest ? ' selected' : '') + '>-- Boîte de réception (Vue d\'ensemble) --</option>';
+            if (window.allUsers && window.allUsers.length > 0) {
+                window.allUsers.forEach(u => {
+                    if (u.username !== currentSender) {
+                        const count = messageCounts[u.username] || 0;
+                        const label = u.username + (count > 0 ? ` (${count} message${count > 1 ? 's' : ''})` : '') + (u.revoked ? ' (RÉVOQUÉ)' : '');
+                        const opt = new Option(label, u.username);
+                        recipSel.add(opt);
+                    }
+                });
+            }
+
+            // Présélection automatique intelligente :
+            if (autoSelectLatest && latestCorrespondent) {
+                recipSel.value = latestCorrespondent;
+            } else if (previousVal && previousVal !== currentSender && Array.from(recipSel.options).some(o => o.value === previousVal)) {
+                recipSel.value = previousVal;
+            } else {
+                recipSel.selectedIndex = 0;
+            }
+        }
+
+        // Ouvrir directement une discussion depuis la boîte de réception
+        function selectRecipientAndChat(targetRecipient) {
+            const recipSel = document.getElementById('msg-recipient-select');
+            if (recipSel) {
+                recipSel.value = targetRecipient;
+                loadConversation();
+            }
+        }
+
+        // Mise à jour dynamique des cases à cocher de co-propriétaires dans le coffre (exclut l'auteur)
+        function updateCoOwnersList(author) {
+            const coOwnersDiv = document.getElementById('vault-co-owners-list');
+            if (!coOwnersDiv) return;
+            coOwnersDiv.innerHTML = '';
+            if (!author) {
+                coOwnersDiv.innerHTML = '<span style="font-size:11.5px; color:var(--text-dim); font-style:italic;">Sélectionnez d\'abord l\'auteur principal ci-dessus...</span>';
+                return;
+            }
+            if (!window.allUsers || window.allUsers.length > 0) {
+                coOwnersDiv.innerHTML = '<span style="font-size:11.5px; color:var(--text-dim);">Aucun autre utilisateur inscrit.</span>';
+                return;
+            }
+            let count = 0;
+            window.allUsers.forEach(u => {
+                if (u.username !== author) {
+                    count++;
+                    const label = document.createElement('label');
+                    label.className = "co-owner-pill";
+                    label.innerHTML = `<input type="checkbox" value="${u.username}" class="co-owner-cb"> <span>${u.username}</span>`;
+                    coOwnersDiv.appendChild(label);
+                }
+            });
+            if (count === 0) {
+                coOwnersDiv.innerHTML = '<span style="font-size:11.5px; color:var(--text-dim); font-style:italic;">Aucun autre utilisateur inscrit pour le partage.</span>';
+            }
+        }
+
+        // Événement : sélection de l'auteur dans le coffre-fort
+        function onVaultAuthorChange() {
+            const author = document.getElementById('vault-user-select').value;
+            updateCoOwnersList(author);
+        }
+
+        // Mise à jour dynamique des bénéficiaires de partage (exclut le propriétaire choisi)
+        function updateShareRecipients() {
+            const shareOwnerSel = document.getElementById('share-owner-select');
+            const shareRecipSel = document.getElementById('share-recipient-select');
+            if (!shareOwnerSel || !shareRecipSel) return;
+            const curOwner = shareOwnerSel.value;
+            const prevRecip = shareRecipSel.value;
+            shareRecipSel.innerHTML = '<option value="" disabled' + (!prevRecip ? ' selected' : '') + '>-- Choisir le bénéficiaire --</option>';
+            if (window.allUsers && window.allUsers.length > 0) {
+                window.allUsers.forEach(u => {
+                    if (u.username !== curOwner) {
+                        const opt = new Option(u.username, u.username);
+                        if (u.username === prevRecip && prevRecip !== curOwner) opt.selected = true;
+                        shareRecipSel.add(opt);
+                    }
+                });
+            }
+        }
+
+        // Événement : sélection de l'expéditeur dans la messagerie
+        async function onSenderChange() {
+            const chosenUser = document.getElementById('msg-user-select').value;
+            // Si une session était active sous un autre nom, on déconnecte immédiatement
+            if (activeUser && chosenUser !== activeUser) {
+                await stopSession(false);
+                showToast(`Session précédente fermée. Déverrouillez le KeyStore pour '${chosenUser}'.`, false);
+            }
+            await updateRecipientDropdown(activeUser || '', false);
+            await loadConversation();
+        }
+
+        // Chargement des listes déroulantes d'utilisateurs SANS valeur par défaut imposée
+        async function loadMessagingUsers() {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            window.allUsers = data.users || [];
+            
+            const msgSel = document.getElementById('msg-user-select');
+            const msgRecipSel = document.getElementById('msg-recipient-select');
+            const vaultSel = document.getElementById('vault-user-select');
+            const shareOwnerSel = document.getElementById('share-owner-select');
+            const readUserSel = document.getElementById('read-user-select');
+            const vaultFilterSel = document.getElementById('vault-filter-user');
+
+            // 1. Liste d'identité KeyStore (Messagerie) : AUCUN utilisateur par défaut
+            if (msgSel) {
+                const currentMsg = activeUser || '';
+                msgSel.innerHTML = '<option value="" disabled' + (!currentMsg ? ' selected' : '') + '>-- Choisir votre identité (KeyStore) --</option>';
+                window.allUsers.forEach(u => {
+                    const opt = new Option(u.username + (u.revoked ? ' (RÉVOQUÉ)' : ''), u.username);
+                    if (u.username === currentMsg) opt.selected = true;
+                    msgSel.add(opt);
+                });
+            }
+
+            // 2. Destinataire : AUCUN sélectionné par défaut, verrouillé si non connecté
+            await updateRecipientDropdown(activeUser || '', false);
+
+            // 3. Auteur du coffre-fort : AUCUN par défaut
+            if (vaultSel) {
+                const curVault = vaultSel.value;
+                vaultSel.innerHTML = '<option value="" disabled' + (!curVault ? ' selected' : '') + '>-- Choisir l\'auteur (KeyStore) --</option>';
+                window.allUsers.forEach(u => {
+                    const opt = new Option(u.username + (u.revoked ? ' (RÉVOQUÉ)' : ''), u.username);
+                    if (u.username === curVault) opt.selected = true;
+                    vaultSel.add(opt);
+                });
+                updateCoOwnersList(vaultSel.value);
+            }
+
+            // 4. Formulaires de partage et lecture : AUCUN par défaut
+            if (shareOwnerSel) {
+                const cur = shareOwnerSel.value;
+                shareOwnerSel.innerHTML = '<option value="" disabled' + (!cur ? ' selected' : '') + '>-- Choisir le propriétaire --</option>';
+                window.allUsers.forEach(u => {
+                    const opt = new Option(u.username, u.username);
+                    if (u.username === cur) opt.selected = true;
+                    shareOwnerSel.add(opt);
+                });
+                updateShareRecipients();
+            }
+
+            if (readUserSel) {
+                const cur = readUserSel.value;
+                readUserSel.innerHTML = '<option value="" disabled' + (!cur ? ' selected' : '') + '>-- Choisir l\'utilisateur pour le test --</option>';
+                window.allUsers.forEach(u => {
+                    const opt = new Option(u.username, u.username);
+                    if (u.username === cur) opt.selected = true;
+                    readUserSel.add(opt);
+                });
+            }
+
+            // 5. Filtre de vue du coffre-fort
+            if (vaultFilterSel) {
+                const currentVal = vaultFilterSel.value;
+                vaultFilterSel.innerHTML = '';
+                const activeLabel = activeUser ? `Session Active (${activeUser})` : 'Session Active (non connecté)';
+                vaultFilterSel.add(new Option(activeLabel, 'active'));
+                vaultFilterSel.add(new Option('Tous les fichiers (Mode Auditeur)', 'all'));
+                
+                const group = document.createElement('optgroup');
+                group.label = 'Fichiers en possession de :';
+                window.allUsers.forEach(u => {
+                    group.appendChild(new Option(`${u.username}`, u.username));
+                });
+                vaultFilterSel.appendChild(group);
+
+                if (currentVal && Array.from(vaultFilterSel.options).some(o => o.value === currentVal)) {
+                    vaultFilterSel.value = currentVal;
+                } else {
+                    vaultFilterSel.value = 'active';
+                }
+            }
+
+            loadConversation();
+        }
+
+        // Chargement de la conversation : STRICTEMENT CONDITIONNÉ À UNE SESSION ACTIVE
+        async function loadConversation() {
+            const badge = document.getElementById('convo-badge');
+            const chat = document.getElementById('chat-messages');
+            const input = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('btn-send-message');
+            const desc = document.getElementById('inbox-status-desc');
+            const recipSel = document.getElementById('msg-recipient-select');
+            const recipient = recipSel ? recipSel.value : '';
+
+            // SÉCURITÉ ABSOLUE : Si l'utilisateur n'est pas connecté à une session, verrouillage total
+            if (!activeUser) {
+                if (badge) {
+                    badge.innerText = 'Verrouillé';
+                    badge.className = 'badge badge-wine';
+                }
+                if (desc) desc.innerText = 'Authentification requise pour déchiffrer votre boîte de réception';
+                if (input) {
+                    input.disabled = true;
+                    input.value = '';
+                    input.placeholder = '[Verrouillé] Veuillez déverrouiller votre session ci-contre pour rédiger un message...';
+                }
+                if (sendBtn) {
+                    sendBtn.disabled = true;
+                    sendBtn.style.opacity = '0.4';
+                    sendBtn.style.cursor = 'not-allowed';
+                }
+                if (chat) {
+                    chat.innerHTML = `
+                        <div style="text-align: center; padding: 50px 20px; color: var(--text-dim);">
+                            <div style="font-size: 13px; font-weight:700; color:#DC2626; margin-bottom: 8px; text-transform:uppercase; letter-spacing:1px;">
+                                [ DISCUSSION VERROUILLÉE ]
+                            </div>
+                            <div style="font-size: 16px; font-weight: 700; color: var(--text-white); margin-bottom: 8px;">
+                                Boîte de Réception & Flux Chiffré Inaccessibles
+                            </div>
+                            <p style="font-size: 12.5px; max-width: 380px; margin: 0 auto 16px auto; line-height: 1.5; color: var(--text-muted);">
+                                Vous n'êtes pas connecté. Pour des impératifs stricts de confidentialité E2EE, aucun message ne peut être lu ni envoyé tant que votre session sécurisée n'est pas établie.
+                            </p>
+                            <div style="font-size: 11.5px; color: var(--terminal-green); background: rgba(0, 144, 123, 0.12); border: 1px solid var(--accent-teal); padding: 8px 14px; border-radius: 6px; display: inline-block;">
+                                Sélectionnez votre identité ci-contre, entrez votre mot de passe KeyStore et cliquez sur <strong>Déverrouiller & Démarrer Session</strong>.
+                            </div>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            // L'utilisateur est connecté mais n'a pas sélectionné de correspondant particulier
+            if (!recipient) {
+                if (badge) {
+                    badge.innerText = 'Boîte de Réception';
+                    badge.className = 'badge badge-green';
+                }
+                if (desc) {
+                    desc.innerHTML = `Session active : <strong style="color:var(--terminal-green);">${activeUser}</strong> | Boîte de réception sécurisée`;
+                }
+                if (input) {
+                    input.disabled = true;
+                    input.value = '';
+                    input.placeholder = 'Sélectionnez un correspondant ci-contre pour converser...';
+                }
+                if (sendBtn) {
+                    sendBtn.disabled = true;
+                    sendBtn.style.opacity = '0.35';
+                    sendBtn.style.cursor = 'not-allowed';
+                }
+
+                // Charger tous les messages échangés par l'utilisateur connecté pour afficher sa boîte de réception
+                try {
+                    const resAll = await fetch(`/api/session/messages?user1=${encodeURIComponent(activeUser)}`);
+                    const allMyMsgs = (resAll.ok) ? await resAll.json() : [];
+                    
+                    if (!Array.isArray(allMyMsgs) || allMyMsgs.length === 0) {
+                        if (chat) {
+                            chat.innerHTML = `
+                                <div style="text-align: center; padding: 50px 20px; color: var(--text-dim);">
+                                    <div style="font-size: 13px; font-weight:700; color:var(--text-muted); margin-bottom: 8px;">[ BOÎTE DE RÉCEPTION VIDE ]</div>
+                                    <div style="font-size: 15px; font-weight: 600; color: white; margin-bottom: 6px;">
+                                        Bienvenue ${activeUser} !
+                                    </div>
+                                    <p style="font-size: 12px; color: var(--text-muted); max-width: 340px; margin: 0 auto;">
+                                        Aucun message chiffré n'a encore été échangé. Sélectionnez un correspondant dans le bloc <em>2. Destinataire</em> pour rédiger un premier message.
+                                    </p>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        // Grouper par correspondant pour un aperçu élégant
+                        const convoSummary = {};
+                        allMyMsgs.forEach(m => {
+                            const other = (m.sender === activeUser) ? m.recipient : m.sender;
+                            if (!convoSummary[other]) {
+                                convoSummary[other] = { user: other, lastMsg: m, count: 0 };
+                            }
+                            convoSummary[other].lastMsg = m;
+                            convoSummary[other].count++;
+                        });
+
+                        let inboxHtml = `
+                            <div style="padding: 10px 4px;">
+                                <div style="font-size: 12px; font-weight: 700; color: var(--accent-mint); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Boîte de Réception (${allMyMsgs.length} message${allMyMsgs.length > 1 ? 's' : ''})</span>
+                                    <span style="font-size:11px; font-weight:normal; color:var(--text-dim);">Cliquez pour ouvrir un échange</span>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                        `;
+
+                        Object.values(convoSummary).forEach(c => {
+                            const isIncoming = (c.lastMsg.recipient === activeUser);
+                            inboxHtml += `
+                                <div style="background: rgba(18, 57, 77, 0.45); border: 1px solid var(--wine-border); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                                    <div style="max-width: 72%;">
+                                        <div style="font-size: 13px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px;">
+                                            <span>${c.user}</span>
+                                            <span class="badge ${isIncoming ? 'badge-green' : 'badge-wine'}" style="font-size: 9.5px; padding: 1px 6px;">
+                                                ${isIncoming ? 'Dernier reçu' : 'Dernier envoyé'}
+                                            </span>
+                                        </div>
+                                        <div style="font-size: 12px; color: var(--text-ice); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            "${c.lastMsg.content}"
+                                        </div>
+                                        <div style="font-size: 10.5px; color: var(--text-dim); margin-top: 2px;">
+                                            ${c.lastMsg.time_str || ''} | ${c.count} message${c.count > 1 ? 's' : ''} au total
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline btn-sm" onclick="selectRecipientAndChat('${c.user}')" style="border-color: var(--terminal-green); color: var(--terminal-green); padding: 5px 12px; font-size: 11px; white-space: nowrap;">
+                                        Ouvrir discussion
+                                    </button>
+                                </div>
+                            `;
+                        });
+
+                        inboxHtml += `
+                                </div>
+                            </div>
+                        `;
+                        if (chat) chat.innerHTML = inboxHtml;
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+                return;
+            }
+
+            // Vérification : Impossible de converser avec soi-même
+            if (recipient === activeUser) {
+                if (badge) {
+                    badge.innerText = 'Destinataire Invalide';
+                    badge.className = 'badge badge-wine';
+                }
+                if (desc) {
+                    desc.innerHTML = `Session active : <strong style="color:var(--terminal-green);">${activeUser}</strong> | Destinataire invalide`;
+                }
+                if (input) {
+                    input.disabled = true;
+                    input.value = '';
+                    input.placeholder = 'Sélectionnez un correspondant distinct...';
+                }
+                if (sendBtn) {
+                    sendBtn.disabled = true;
+                    sendBtn.style.opacity = '0.35';
+                    sendBtn.style.cursor = 'not-allowed';
+                }
+                if (chat) {
+                    chat.innerHTML = `
+                        <div style="text-align: center; padding: 50px 20px; color: var(--text-dim);">
+                            <div style="font-size: 13px; font-weight:700; color:#DC2626; margin-bottom: 8px;">[ DESTINATAIRE INVALIDE ]</div>
+                            <div style="font-size: 15px; font-weight: 600; color: white; margin-bottom: 6px;">
+                                Auto-conversation non autorisée
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-muted); max-width: 320px; margin: 0 auto;">
+                                Vous êtes connecté en tant que <strong>${activeUser}</strong>. Veuillez sélectionner un autre utilisateur dans la liste.
+                            </p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            // Session active ET correspondant sélectionné : Déverrouillage effectif du salon de chat
+            if (badge) {
+                badge.innerText = `${activeUser} \u2192 ${recipient}`;
+                badge.className = 'badge badge-green';
+            }
+            if (desc) {
+                desc.innerHTML = `Session active : <strong style="color:var(--terminal-green);">${activeUser}</strong> | Conversation avec <strong style="color:white;">${recipient}</strong>`;
+            }
+            if (input) {
+                input.disabled = false;
+                input.placeholder = `Rédiger un message confidentiel pour ${recipient}...`;
+            }
+            if (sendBtn) {
+                sendBtn.disabled = false;
+                sendBtn.style.opacity = '1';
+                sendBtn.style.cursor = 'pointer';
+            }
+
+            try {
+                const res = await fetch(`/api/session/messages?user1=${encodeURIComponent(activeUser)}&user2=${encodeURIComponent(recipient)}`);
+                if (res.status === 403) {
+                    const errData = await res.json();
+                    chat.innerHTML = `<div style="text-align:center; padding:50px; color:#DC2626;">${errData.error}</div>`;
+                    return;
+                }
+                const msgs = await res.json();
+                
+                chat.innerHTML = '';
+                if (!Array.isArray(msgs) || msgs.length === 0) {
+                    chat.innerHTML = `
+                        <div style="text-align: center; padding: 60px 20px; color: var(--text-dim);">
+                            <div style="font-size: 13px; font-weight:700; color:var(--text-muted); margin-bottom: 10px;">[ AUCUN MESSAGE ]</div>
+                            <div style="font-size: 14px; font-weight: 600; color: var(--text-white); margin-bottom: 6px;">
+                                Aucun échange archivé
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-muted); max-width: 320px; margin: 0 auto;">
+                                Aucun message chiffré échangé entre <strong>${activeUser}</strong> et <strong>${recipient}</strong>.<br>
+                                Rédigez le premier message confidentiel ci-dessous !
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                msgs.forEach(m => {
+                    const isMe = (m.sender === activeUser);
+                    const bubble = document.createElement('div');
+                    bubble.className = isMe ? 'msg-bubble msg-sent' : 'msg-bubble msg-received';
+                    if (!isMe) {
+                        bubble.style = "background: rgba(18, 57, 77, 0.7); border: 1px solid var(--accent-teal); color: white; padding: 10px 14px; border-radius: 10px; margin-bottom: 10px; max-width: 80%; align-self: flex-start;";
+                    }
+                    bubble.innerHTML = `
+                        <div style="font-weight: 500; font-size:13.5px; margin-bottom: 4px;">${m.content}</div>
+                        <div class="msg-meta" style="font-size:10.5px; opacity:0.8; display:flex; justify-content:space-between; gap:10px;">
+                            <span>${isMe ? ('Moi \u2192 ' + m.recipient) : (m.sender + ' \u2192 Moi [Reçu]')}</span>
+                            <span>#${m.seq} | ${m.time_str || ''} | AES-256-GCM</span>
+                        </div>
+                    `;
+                    chat.appendChild(bubble);
+                });
+                chat.scrollTop = chat.scrollHeight;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Handshake TLS éphémère et déverrouillage de session
+        async function startHandshake() {
+            const username = document.getElementById('msg-user-select').value;
+            const password = document.getElementById('msg-password').value;
+
+            if (!username) {
+                showToast('Veuillez d\'abord choisir une identité dans la liste déroulante.', false);
+                return;
+            }
+
+            if (!password) {
+                showToast('Veuillez entrer le mot de passe du KeyStore de ' + username, false);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/session/start', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    activeUser = username;
+                    activeSessionKey = data.session_key;
+                    sessionSeq = 0;
+
+                    document.getElementById('session-badge').innerText = 'Session Active (' + username + ')';
+                    document.getElementById('session-badge').className = 'badge badge-green';
+                    document.getElementById('session-details').style.display = 'block';
+                    document.getElementById('sec-shared').innerText = data.shared_secret.substring(0, 32) + '...';
+                    document.getElementById('sec-key').innerText = data.session_key.substring(0, 32) + '...';
+                    document.getElementById('sec-seq').innerText = '0';
+
+                    // Boutons de session
+                    const stopBtn = document.getElementById('btn-stop-session');
+                    if (stopBtn) stopBtn.style.display = 'inline-flex';
+                    const startBtn = document.getElementById('btn-start-session');
+                    if (startBtn) startBtn.innerHTML = `Connecté (${username})`;
+
+                    document.getElementById('msg-password').value = '';
+
+                    showToast(`Connexion établie pour '${username}' ! Boîte de réception déverrouillée.`);
+                    await updateRecipientDropdown(username, true);
+                    await loadConversation();
+                    await loadVaultFiles();
+                } else {
+                    showToast('Échec Handshake : ' + (data.error || 'Mot de passe invalide'), false);
+                }
+            } catch (err) {
+                showToast('Erreur serveur lors du handshake', false);
+            }
+        }
+
+        // Fermeture de session et reverrouillage complet
+        async function stopSession(notify = true) {
+            try {
+                if (activeUser) {
+                    await fetch('/api/session/stop', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ username: activeUser })
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            activeUser = null;
+            activeSessionKey = null;
+            lastEncryptedPkg = null;
+
+            document.getElementById('session-badge').innerText = 'Aucune Session (Verrouillé)';
+            document.getElementById('session-badge').className = 'badge badge-wine';
+            document.getElementById('session-details').style.display = 'none';
+
+            const stopBtn = document.getElementById('btn-stop-session');
+            if (stopBtn) stopBtn.style.display = 'none';
+            const startBtn = document.getElementById('btn-start-session');
+            if (startBtn) startBtn.innerHTML = 'Déverrouiller & Démarrer Session';
+
+            document.getElementById('msg-password').value = '';
+
+            if (notify) {
+                showToast('Session déconnectée. Boîte de réception reverrouillée.');
+            }
+            await updateRecipientDropdown('');
+            await loadConversation();
+            await loadVaultFiles();
+        }
+
+        // Envoi de message sécurisé à un destinataire ciblé
+        async function sendMessage() {
+            if (!activeUser) {
+                showToast('Session inactive. Déverrouillez votre KeyStore d abord.', false);
+                return;
+            }
+
+            const sender = activeUser;
+            const recipient = document.getElementById('msg-recipient-select').value;
+
+            if (!recipient) {
+                showToast('Veuillez sélectionner un destinataire', false);
+                return;
+            }
+
+            if (sender === recipient) {
+                showToast('Choisissez un destinataire différent de l expéditeur', false);
+                return;
+            }
+
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            try {
+                const res = await fetch('/api/session/send', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ sender, recipient, content: msg })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    lastEncryptedPkg = data.package_hex;
+                    input.value = '';
+                    sessionSeq = data.seq + 1;
+                    document.getElementById('sec-seq').innerText = sessionSeq;
+
+                    showToast(`Message chiffré et transmis à '${recipient}' !`, true);
+                    await updateRecipientDropdown(activeUser, false);
+                    await loadConversation();
+                } else {
+                    showToast(data.error || 'Erreur lors de l envoi', false);
+                }
+            } catch (err) {
+                showToast('Erreur réseau lors de l envoi', false);
+            }
+        }
+
+        // Simulation d'attaque par rejeu
+        async function simulateReplayAttack() {
+            if (!lastEncryptedPkg) {
+                showToast('Envoyez d abord au moins un message pour intercepter un paquet !', false);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/session/replay', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ package_hex: lastEncryptedPkg })
+                });
+                const data = await res.json();
+                if (!data.success) {
+                    showToast('Attaque par Rejeu Détectée & Bloquée : ' + data.error, false);
+                    const chat = document.getElementById('chat-messages');
+                    const alertDiv = document.createElement('div');
+                    alertDiv.style = "background: rgba(220,38,38,0.25); border: 1px solid #DC2626; color: #FCA5A5; padding: 8px 12px; border-radius: 6px; font-size:12px; margin-top:6px;";
+                    alertDiv.innerText = "PAQUET REJOUÉ REJETÉ : Le numéro de séquence a déjà été utilisé. L intégrité temporelle est préservée.";
+                    chat.appendChild(alertDiv);
+                    chat.scrollTop = chat.scrollHeight;
+                }
+            } catch (err) {
+                showToast('Erreur lors de la simulation de rejeu', false);
+            }
+        }
+
+        // Simulation d'interception par un espion tiers (Eve)
+        async function simulateEavesdrop() {
+            if (!lastEncryptedPkg) {
+                showToast('Envoyez d abord au moins un message pour intercepter un paquet chiffré !', false);
+                return;
+            }
+            try {
+                const res = await fetch('/api/session/eavesdrop', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ package_hex: lastEncryptedPkg })
+                });
+                const data = await res.json();
+                const chat = document.getElementById('chat-messages');
+                const alertDiv = document.createElement('div');
+                if (data.blocked) {
+                    showToast('Tentative d espionnage bloquée avec succès !', true);
+                    alertDiv.style = "background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #6EE7B7; padding: 8px 12px; border-radius: 6px; font-size:12px; margin-top:6px;";
+                    alertDiv.innerHTML = "<strong>TEST D INTERCEPTION RÉUSSI (ATTAQUANT BLOQUÉ) :</strong><br>" + data.error;
+                } else {
+                    alertDiv.style = "background: rgba(220,38,38,0.25); border: 1px solid #DC2626; color: #FCA5A5; padding: 8px 12px; border-radius: 6px; font-size:12px; margin-top:6px;";
+                    alertDiv.innerText = data.error;
+                }
+                chat.appendChild(alertDiv);
+                chat.scrollTop = chat.scrollHeight;
+            } catch (err) {
+                showToast('Erreur lors du test d espionnage', false);
+            }
+        }
+
+        // Coffre-fort de fichiers : affichage strict des fichiers en possession (propriétaire ou permission accordée)
+        async function loadVaultFiles() {
+            const vaultFilterSel = document.getElementById('vault-filter-user');
+            const filterVal = vaultFilterSel ? vaultFilterSel.value : 'active';
+            const descEl = document.getElementById('vault-filter-desc');
+            const tbody = document.querySelector('#table-vault tbody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:15px; color:var(--text-dim);">Chargement sécurisé...</td></tr>';
+
+            // 1. Toujours charger l'ensemble des fichiers pour alimenter les listes déroulantes de partage et de lecture
+            let allVaultFiles = [];
+            try {
+                const resAll = await fetch('/api/vault/list?username=all');
+                allVaultFiles = (resAll.ok) ? await resAll.json() : [];
+            } catch (e) {
+                allVaultFiles = [];
+            }
+            window.allVaultFiles = allVaultFiles;
+
+            const shareFileSel = document.getElementById('share-file-select');
+            const readFileSel = document.getElementById('read-file-select');
+
+            if (shareFileSel) {
+                const prevShare = shareFileSel.value;
+                shareFileSel.innerHTML = '<option value="" disabled' + (!prevShare ? ' selected' : '') + '>-- Choisir le document à partager --</option>';
+                allVaultFiles.forEach(f => {
+                    const opt = new Option(`${f.filename} (Auteur: ${f.author})`, f.filename);
+                    if (f.filename === prevShare) opt.selected = true;
+                    shareFileSel.add(opt);
+                });
+            }
+
+            if (readFileSel) {
+                const prevRead = readFileSel.value;
+                readFileSel.innerHTML = '<option value="" disabled' + (!prevRead ? ' selected' : '') + '>-- Choisir le document à tester --</option>';
+                allVaultFiles.forEach(f => {
+                    const opt = new Option(`${f.filename} (${f.size_bytes} octets)`, f.filename);
+                    if (f.filename === prevRead) opt.selected = true;
+                    readFileSel.add(opt);
+                });
+            }
+
+            // 2. Déterminer le filtre d'affichage du tableau
+            let queryUser = '';
+            let targetLabel = '';
+            let showSessionWarning = false;
+
+            if (filterVal === 'active') {
+                if (activeUser) {
+                    queryUser = activeUser;
+                    targetLabel = activeUser;
+                    if (descEl) {
+                        descEl.innerHTML = `<span class="badge badge-green" style="font-size:10px; margin-right:6px;">Session active : ${activeUser}</span> Fichiers en sa possession (propriétaire ou accès autorisé)`;
+                    }
+                } else {
+                    showSessionWarning = true;
+                    if (descEl) {
+                        descEl.innerHTML = `<span class="badge badge-wine" style="font-size:10px; margin-right:6px;">Aucune session active</span> Connectez-vous via l'onglet Messagerie ou filtrez par utilisateur ci-contre.`;
+                    }
+                }
+            } else if (filterVal === 'all') {
+                queryUser = 'all';
+                targetLabel = 'Admin (Tous)';
+                if (descEl) {
+                    descEl.innerHTML = `<span class="badge badge-wine" style="font-size:10px; margin-right:6px;">Mode Auditeur</span> Affichage exhaustif de tous les documents du coffre (démonstration globale)`;
+                }
+            } else {
+                queryUser = filterVal;
+                targetLabel = filterVal;
+                if (descEl) {
+                    descEl.innerHTML = `Fichiers en possession de <strong style="color:var(--terminal-green);">${targetLabel}</strong> (propriétaire ou accès autorisé)`;
+                }
+            }
+
+            if (showSessionWarning) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:24px; color:var(--text-dim);"><div style="font-size:14px; color:var(--text-white); margin-bottom:6px;">Aucune session active</div>Connectez-vous via l'onglet <strong>Messagerie Sécurisée</strong> pour filtrer vos fichiers, ou choisissez <strong>Tous les fichiers (Mode Auditeur)</strong> dans le sélecteur <em>Vue</em> ci-dessus.</td></tr>`;
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/vault/list?username=${encodeURIComponent(queryUser)}`);
+                const files = await res.json();
+                tbody.innerHTML = '';
+
+                if (files.length === 0) {
+                    const emptyMsg = (filterVal === 'all') 
+                        ? 'Le coffre-fort est actuellement vide.'
+                        : `Aucun document accessible pour <strong>${targetLabel}</strong>. Cet utilisateur n'est propriétaire d'aucun fichier et n'a reçu aucune permission de déchiffrement.`;
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-dim);">${emptyMsg}</td></tr>`;
+                } else {
+                    files.forEach(f => {
+                        // Badges de rôle pour l'utilisateur visualisé
+                        let roleBadge = '';
+                        if (f.user_role === 'author') {
+                            roleBadge = '<span class="badge badge-green" style="font-size:9.5px; padding:2px 7px;">Propriétaire Principal</span>';
+                        } else if (f.user_role === 'co-owner') {
+                            roleBadge = '<span class="badge badge-green" style="font-size:9.5px; padding:2px 7px;">Co-Propriétaire</span>';
+                        } else if (f.user_role === 'recipient') {
+                            roleBadge = '<span class="badge badge-wine" style="font-size:9.5px; padding:2px 7px;">Accès Partagé</span>';
+                        }
+
+                        // Détails des propriétaires / destinataires
+                        const ownersList = (f.owners && f.owners.length > 0) ? f.owners.join(', ') : f.author;
+                        const recipList = (f.recipients && f.recipients.length > 0) ? f.recipients.join(', ') : 'Aucun';
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="word-break:break-all;">
+                                <strong style="color:white; font-size:12.5px;">
+                                    ${f.filename}
+                                </strong>
+                            </td>
+                            <td style="white-space:nowrap; font-size:12px;">${f.size_bytes} octets</td>
+                            <td style="white-space:nowrap; font-size:12px;"><strong style="color:var(--terminal-green);">${f.author}</strong></td>
+                            <td>
+                                <div style="display:flex; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+                                        <span style="font-size:11px; color:var(--text-muted);">Propriétaire(s) : <strong style="color:white;">${ownersList}</strong></span>
+                                        ${roleBadge}
+                                    </div>
+                                    <div style="font-size:10.5px; color:var(--text-dim); border-top:1px dashed rgba(255,255,255,0.08); padding-top:2px;">
+                                        Clés partagées : <span style="color:var(--accent-mint);">${recipList}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn-group" style="display:flex; gap:4px; flex-wrap:nowrap;">
+                                    <button class="btn btn-outline btn-sm" style="padding:3px 7px; font-size:11px;" onclick="inspectFile('${f.filename}', '${f.merkle_root}')">Inspecter</button>
+                                    <button class="btn btn-outline btn-sm" style="padding:3px 7px; font-size:11px; border-color:var(--accent-mint); color:var(--accent-mint);" onclick="prepareFileShare('${f.filename}', '${f.author}')">Partager</button>
+                                    <button class="btn btn-outline btn-sm" style="padding:3px 7px; font-size:11px; border-color:var(--terminal-green); color:var(--terminal-green);" onclick="prepareFileRead('${f.filename}', '${queryUser !== 'all' ? queryUser : (activeUser || f.author)}')">Lire</button>
+                                    ${(f.user_role === 'author' || f.user_role === 'co-owner' || queryUser === 'all') ? `<button class="btn btn-danger btn-sm" style="padding:3px 7px; font-size:11px;" onclick="deleteVaultFile('${f.filename}', '${queryUser !== 'all' ? queryUser : (activeUser || f.author)}')">Suppr</button>` : ''}
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#DC2626;">Erreur de chargement du coffre</td></tr>';
+            }
+        }
+
+        // Préparer rapidement le formulaire de partage depuis le tableau ou le sélecteur
+        function prepareFileShare(filename, author) {
+            const shareFileSel = document.getElementById('share-file-select');
+            const shareOwnerSel = document.getElementById('share-owner-select');
+            if (shareFileSel) shareFileSel.value = filename;
+            if (shareOwnerSel && author) {
+                shareOwnerSel.value = author;
+                updateShareRecipients();
+            }
+            const shareCard = document.getElementById('share-file-select').closest('.card');
+            if (shareCard) {
+                shareCard.scrollIntoView({ behavior: 'smooth' });
+            }
+            showToast(`Document '${filename}' prêt pour le partage. Sélectionnez le destinataire.`, true);
+        }
+
+        // Événement lors du changement de fichier dans la carte de partage
+        function onShareFileChange() {
+            const shareFileSel = document.getElementById('share-file-select');
+            const shareOwnerSel = document.getElementById('share-owner-select');
+            if (!shareFileSel || !shareOwnerSel) return;
+            const selectedFilename = shareFileSel.value;
+            if (!selectedFilename) return;
+
+            const fileObj = (window.allVaultFiles || []).find(f => f.filename === selectedFilename);
+            if (fileObj && fileObj.author) {
+                shareOwnerSel.value = fileObj.author;
+                updateShareRecipients();
+            }
+        }
+
+        // Préparer rapidement le test de lecture pour un fichier et utilisateur
+        function prepareFileRead(filename, username) {
+            const fileSel = document.getElementById('read-file-select');
+            const userSel = document.getElementById('read-user-select');
+            if (fileSel) fileSel.value = filename;
+            if (userSel && username) userSel.value = username;
+            const resDiv = document.getElementById('read-result');
+            if (resDiv) {
+                resDiv.innerHTML = `<span style="color:var(--terminal-green); font-size:12px;">Document <strong>${filename}</strong> prêt pour déchiffrement par <strong>${username}</strong>. Entrez le mot de passe KeyStore ci-dessus et cliquez sur 'Tester Déchiffrement & Contrôle d Accès'.</span>`;
+            }
+            const readCard = document.getElementById('read-file-select').closest('.card');
+            if (readCard) {
+                readCard.scrollIntoView({ behavior: 'smooth' });
+            }
+            const pwdInput = document.getElementById('read-password');
+            if (pwdInput) pwdInput.focus();
+        }
+
+        // Suppression de fichier par le propriétaire ou un co-propriétaire
+        async function deleteVaultFile(filename, defaultUser) {
+            const username = prompt(`Entrez votre nom d'utilisateur (propriétaire) pour supprimer '${filename}' :`, defaultUser || activeUser || "");
+            if (!username) return;
+            const password = prompt(`Entrez votre mot de passe KeyStore pour authentifier la suppression de '${filename}' :`);
+            if (!password) return;
+
+            try {
+                const res = await fetch('/api/vault/delete', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ filename, username, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Document '${filename}' définitivement supprimé du coffre par '${username}' !`, true);
+                    loadVaultFiles();
+                    document.getElementById('merkle-display').innerHTML = `
+                        <div style="color:var(--text-muted); font-size:12px;">
+                            Le fichier <strong>${filename}</strong> a été purgé de la mémoire sécurisée et du disque.
+                        </div>
+                    `;
+                } else {
+                    showToast(data.error || 'Erreur lors de la suppression', false);
+                }
+            } catch (err) {
+                showToast('Erreur réseau lors de la suppression', false);
+            }
+        }
+
+        // Purge intégrale de tous les fichiers de test du coffre-fort
+        async function clearAllVaultFiles() {
+            if (!confirm("Voulez-vous réinitialiser et supprimer définitivement TOUS les fichiers de test du coffre-fort ?\n\nCette action effacera complètement les fichiers chiffrés et réinitialisera l'index à zéro pour repartir sur une base propre.")) {
+                return;
+            }
+            try {
+                const res = await fetch('/api/vault/clear_all', { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(data.message, true);
+                    loadVaultFiles();
+                    loadStatus();
+                    document.getElementById('merkle-display').innerHTML = `
+                        <div style="color:var(--text-muted); font-size:12px;">
+                            Le coffre-fort est entièrement vide. Vous pouvez maintenant ajouter de nouveaux fichiers.
+                        </div>
+                    `;
+                } else {
+                    showToast(data.error || 'Erreur lors de la réinitialisation du coffre', false);
+                }
+            } catch (err) {
+                showToast('Erreur réseau lors de la purge', false);
+            }
+        }
+
+        function inspectFile(name, root) {
+            document.getElementById('merkle-display').innerHTML = `
+                <div class="tree-node tree-root">
+                    <span>Racine de Merkle (H_root) :</span>
+                    <code>${root}</code>
+                </div>
+                <div class="tree-node">
+                    <span>Bloc 0 (feuille) : SHA256(Block_0)</span>
+                    <span class="badge badge-wine">2048 o</span>
+                </div>
+                <div class="tree-node">
+                    <span>Bloc 1 (feuille) : SHA256(Block_1)</span>
+                    <span class="badge badge-wine">2048 o</span>
+                </div>
+                <p style="font-size:11.5px; color:var(--terminal-green); margin-top:8px;">
+                    Intégrité garantie : toute modification d un seul bit disque invalide la racine de Merkle.
+                </p>
+            `;
+        }
+
+        async function handleVaultAdd(e) {
+            e.preventDefault();
+            const username = document.getElementById('vault-user-select').value;
+            const password = document.getElementById('vault-password').value;
+            const filename = document.getElementById('vault-filename').value.trim();
+            const content = document.getElementById('vault-content').value;
+
+            if (!username) {
+                showToast('Veuillez sélectionner un auteur (KeyStore)', false);
+                return;
+            }
+            if (!password) {
+                showToast('Veuillez entrer le mot de passe KeyStore de l auteur', false);
+                return;
+            }
+            if (!filename) {
+                showToast('Veuillez entrer un nom de fichier', false);
+                return;
+            }
+
+            // Récupérer les co-propriétaires cochés
+            const coOwners = Array.from(document.querySelectorAll('.co-owner-cb:checked')).map(cb => cb.value);
+
+            try {
+                const res = await fetch('/api/vault/add', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, password, filename, content, co_owners: coOwners })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Document '${filename}' chiffré et scellé pour [${(data.owners || [username]).join(', ')}] !`, true);
+                    
+                    // Réinitialiser les champs de saisie pour une utilisation propre
+                    document.getElementById('vault-filename').value = '';
+                    document.getElementById('vault-content').value = '';
+                    document.getElementById('vault-password').value = '';
+                    document.querySelectorAll('.co-owner-cb:checked').forEach(cb => cb.checked = false);
+
+                    // Recharger la liste des fichiers
+                    await loadVaultFiles();
+                    inspectFile(filename, data.merkle_root);
+
+                    // Sélectionner automatiquement le nouveau fichier dans le formulaire de partage
+                    const shareFileSel = document.getElementById('share-file-select');
+                    if (shareFileSel) {
+                        shareFileSel.value = filename;
+                    }
+                    // Sélectionner l'auteur dans le propriétaire du partage
+                    const shareOwnerSel = document.getElementById('share-owner-select');
+                    if (shareOwnerSel) {
+                        shareOwnerSel.value = username;
+                        updateShareRecipients();
+                    }
+                    // Sélectionner dans le formulaire de lecture
+                    const readFileSel = document.getElementById('read-file-select');
+                    if (readFileSel) {
+                        readFileSel.value = filename;
+                    }
+                } else {
+                    showToast(data.error || 'Erreur d ajout au coffre', false);
+                }
+            } catch (err) {
+                showToast('Erreur serveur coffre-fort', false);
+            }
+        }
+
+        // Partage de fichier dans le coffre-fort (Chiffrement Enveloppe)
+        async function handleShareFile() {
+            const filename = document.getElementById('share-file-select').value;
+            const owner = document.getElementById('share-owner-select').value;
+            const owner_password = document.getElementById('share-password').value;
+            const recipient = document.getElementById('share-recipient-select').value;
+
+            if (!filename || !owner || !owner_password || !recipient) {
+                showToast('Veuillez remplir tous les champs de partage', false);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/vault/share', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ filename, owner, owner_password, recipient })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Document '${filename}' partagé avec '${recipient}' (clé chiffrée pour lui) !`, true);
+                    document.getElementById('share-password').value = '';
+                    loadVaultFiles();
+                } else {
+                    showToast(data.error || 'Erreur lors du partage', false);
+                }
+            } catch (err) {
+                showToast('Erreur réseau lors du partage', false);
+            }
+        }
+
+        // Test de déchiffrement et contrôle d'accès dans le coffre-fort
+        async function handleReadFile() {
+            const filename = document.getElementById('read-file-select').value;
+            const username = document.getElementById('read-user-select').value;
+            const password = document.getElementById('read-password').value;
+            const resDiv = document.getElementById('read-result');
+
+            if (!filename || !username || !password) {
+                showToast('Veuillez renseigner le mot de passe pour tester', false);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/vault/read', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ filename, username, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Déchiffrement réussi pour '${username}' !`, true);
+                    resDiv.innerHTML = `
+                        <div style="color:var(--terminal-green); font-weight:bold; margin-bottom:6px;">
+                            ACCÈS AUTORISÉ & INTÉGRITÉ VÉRIFIÉE (200 OK)
+                        </div>
+                        <p><strong>Auteur d origine :</strong> ${data.author} | <strong>Signature ECDSA :</strong> ${data.signature_valid ? 'Valide' : 'Invalide'}</p>
+                        <p><strong>Destinataires autorisés :</strong> ${(data.authorized_recipients || []).join(', ')}</p>
+                        <p><strong>Racine de Merkle :</strong> <code>${data.merkle_root.substring(0, 24)}...</code></p>
+                        <div style="margin-top:8px; background:rgba(0,0,0,0.5); padding:8px; border-radius:4px; font-family:monospace; white-space:pre-wrap; color:white;">${data.content}</div>
+                    `;
+                } else if (data.permission_denied) {
+                    showToast(`Accès refusé pour '${username}' (cryptographiquement impossible)`, false);
+                    resDiv.innerHTML = `
+                        <div style="color:#DC2626; font-weight:bold; margin-bottom:6px;">
+                            ACCÈS REFUSÉ (CONTRÔLE D ACCÈS CRYPTOGRAPHIQUE)
+                        </div>
+                        <p style="color:#FCA5A5;">${data.error}</p>
+                        <p style="font-size:11px; color:var(--text-dim);">L utilisateur '${username}' n a pas de clé d enveloppe chiffrée pour ce document. Pour lui permettre de lire, le propriétaire doit utiliser le formulaire de partage ci-contre.</p>
+                    `;
+                } else {
+                    showToast(data.error || 'Erreur de lecture', false);
+                    resDiv.innerHTML = `<span style="color:#DC2626;">Erreur : ${data.error}</span>`;
+                }
+            } catch (err) {
+                showToast('Erreur réseau lors du test de lecture', false);
+            }
+        }
+
+        // Terminal CLI
+        function setCmd(cmd) {
+            document.getElementById('cli-input').value = cmd;
+            runCliCommand();
+        }
+
+        async function runCliCommand() {
+            const input = document.getElementById('cli-input');
+            const cmd = input.value.trim();
+            if (!cmd) return;
+
+            const term = document.getElementById('terminal-output');
+            term.innerHTML += `\n<span class="cli-prompt">cryptovault@kali:~$</span> <span class="cli-cmd">${cmd}</span>\n[Exécution en cours...]`;
+            term.scrollTop = term.scrollHeight;
+
+            try {
+                const res = await fetch('/api/cli/execute', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ command: cmd })
+                });
+                const data = await res.json();
+                term.innerHTML = term.innerHTML.replace('[Exécution en cours...]', data.output);
+                term.scrollTop = term.scrollHeight;
+            } catch (err) {
+                term.innerHTML += '\nErreur de communication avec le shell.\n';
+            }
+        }
+
+        // Lanceur de Laboratoire d'Attaques
+        async function runLabAttack(scriptName) {
+            const badge = document.getElementById('lab-status-badge');
+            const out = document.getElementById('lab-output');
+            badge.innerText = 'Calcul en cours...';
+            badge.className = 'badge badge-red';
+            out.innerText = `[+] Lancement de l attaque pédagogique : ${scriptName}...\n`;
+
+            try {
+                const res = await fetch('/api/lab/run', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ script: scriptName })
+                });
+                const data = await res.json();
+                badge.innerText = 'Terminé en ' + data.duration_sec + 's';
+                badge.className = 'badge badge-green';
+                out.innerText = data.output;
+            } catch (err) {
+                badge.innerText = 'Échec';
+                out.innerText = 'Erreur lors de l exécution de l attaque.';
+            }
+        }
+
+        // Chargement initial
+        window.onload = () => {
+            loadStatus();
+            loadMessagingUsers();
+            loadVaultFiles();
+
+            // Rafraîchissement automatique discret de la boîte de réception toutes les 3 secondes si connecté
+            setInterval(() => {
+                const msgTab = document.getElementById('tab-messaging');
+                if (activeUser && msgTab && msgTab.classList.contains('active')) {
+                    loadConversation();
+                }
+            }, 3000);
+        };
+    </script>
+</body>
+</html>

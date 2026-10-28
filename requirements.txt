@@ -1,0 +1,8 @@
+# Dépendances requises pour CryptoVault
+cryptography>=41.0.0
+Flask>=2.3.0
+
+# Dépendances optionnelles (uniquement si recompilation personnalisée des rapports) :
+# weasyprint>=60.0
+# markdown>=3.4
+# pypdf>=3.0

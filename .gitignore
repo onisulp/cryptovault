@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environnements virtuels
+.venv/
+venv/
+ENV/
+env/
+
+# Données d'exécution et clés locales sensibles (CryptoVault)
+# NE PAS COMMITER : contient les clés privées locales et l'état runtime
+.server_data/
+.vault_storage/
+.keystores/
+*.vault
+*_ks.json
+
+# Fichiers générés par les tests du laboratoire
+lab/demo_*.bmp
+lab/demo_*.png
+
+# Fichiers d'archive
+*.zip
+*.tar.gz
+*.rar
+
+# Logs et caches de tests
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Fichiers système et éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
